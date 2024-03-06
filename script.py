@@ -12,6 +12,8 @@ class Script:
                 "a": ("INT,FLOAT,STRING",),
                 "b": ("INT,FLOAT,STRING",),
                 "c": ("INT,FLOAT,STRING",),
+                "d": ("INT,FLOAT,STRING",),
+                "e": ("INT,FLOAT,STRING",),
             },
         }
 
@@ -19,8 +21,8 @@ class Script:
     FUNCTION = "execute"
     CATEGORY = "SeedV"
 
-    def execute(self, script, a=None, b=None, c=None):
-        loc = {"a": a, "b": b, "c": c}
+    def execute(self, script, a=None, b=None, c=None, d=None, e=None):
+        loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
         exec(script, {"__builtins__": None}, loc)
 
         result = loc["result"]
