@@ -1,3 +1,6 @@
+import random
+
+
 class Script:
     @classmethod
     def INPUT_TYPES(cls):
@@ -23,7 +26,7 @@ class Script:
 
     def execute(self, script, a=None, b=None, c=None, d=None, e=None):
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
-        exec(script, {"__builtins__": None}, loc)
+        exec(script, {"__builtins__": {"random": random}}, loc)
 
         result = loc["result"]
         try:
