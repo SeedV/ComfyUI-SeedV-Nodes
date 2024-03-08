@@ -17,6 +17,9 @@ class Script:
                 "c": ("INT,FLOAT,STRING",),
                 "d": ("INT,FLOAT,STRING",),
                 "e": ("INT,FLOAT,STRING",),
+                "seed": ("INT", {
+                    "default": 0, "min": 0, "max": 0xffffffffffffffff
+                }),
             },
         }
 
@@ -24,7 +27,8 @@ class Script:
     FUNCTION = "execute"
     CATEGORY = "SeedV"
 
-    def execute(self, script, a=None, b=None, c=None, d=None, e=None):
+    def execute(self, script, a=None, b=None, c=None, d=None, e=None, seed=0):
+        random.seed(seed)
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
         exec(script, {"__builtins__": {"random": random}}, loc)
 
