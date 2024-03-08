@@ -17,10 +17,12 @@ class Script:
                 "c": ("INT,FLOAT,STRING",),
                 "d": ("INT,FLOAT,STRING",),
                 "e": ("INT,FLOAT,STRING",),
+            },
+            "hidden": {
                 "seed": ("INT", {
                     "default": 0, "min": 0, "max": 0xffffffffffffffff
                 }),
-            },
+            }
         }
 
     RETURN_TYPES = ("INT", "FLOAT", "STRING",)
