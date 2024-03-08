@@ -10,6 +10,9 @@ class Script:
                     "multiline": True,
                     "dynamicPrompts": False,
                 }),
+                "seed": ("INT", {
+                    "default": 0, "min": 0, "max": 0xffffffffffffffff
+                }),
             },
             "optional": {
                 "a": ("INT,FLOAT,STRING",),
@@ -18,18 +21,13 @@ class Script:
                 "d": ("INT,FLOAT,STRING",),
                 "e": ("INT,FLOAT,STRING",),
             },
-            "hidden": {
-                "seed": ("INT", {
-                    "default": 0, "min": 0, "max": 0xffffffffffffffff
-                }),
-            }
         }
 
     RETURN_TYPES = ("INT", "FLOAT", "STRING",)
     FUNCTION = "execute"
     CATEGORY = "SeedV"
 
-    def execute(self, script, a=None, b=None, c=None, d=None, e=None, seed=0):
+    def execute(self, script, seed, a=None, b=None, c=None, d=None, e=None):
         random.seed(seed)
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
         exec(script, {"__builtins__": {"random": random}}, loc)
