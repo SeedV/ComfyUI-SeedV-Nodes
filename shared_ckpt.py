@@ -28,7 +28,7 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "ckpt_name": ("STRING,INT",),
+                "ckpt_name": ("STRING", ""),
                 "key_opt": ("STRING", {"multiline": False, "placeholder": "If empty, use 'ckpt_name' as the key."}),
             },
             "optional": {
