@@ -28,10 +28,10 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
     def INPUT_TYPES(s):
         return {
             "required": {
+                "ckpt_name": ("STRING",),
                 "key_opt": ("STRING", {"multiline": False, "placeholder": "If empty, use 'ckpt_name' as the key."}),
             },
             "optional": {
-                "ckpt_name": ("STRING",),
                 "mode": (['Auto', 'Override Cache', 'Read Only'],),
             }
         }
@@ -42,7 +42,7 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
 
     CATEGORY = "SeedV"
 
-    def doit(self, key_opt, ckpt_name=None, mode='Auto'):
+    def doit(self, ckpt_name, key_opt, mode='Auto'):
         if mode == 'Read Only':
             if key_opt.strip() == '':
                 raise Exception("[CheckpointLoaderSimpleShared] key_opt cannot be omit if mode is 'Read Only'")
