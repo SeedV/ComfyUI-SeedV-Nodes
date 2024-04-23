@@ -43,12 +43,3 @@ class Script:
             result_float = 0
 
         return {"result": (result_int, result_float, str(result))}
-
-
-NODE_CLASS_MAPPINGS = {
-    "Script": Script,
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "Script": "Script",
-}
