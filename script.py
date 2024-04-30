@@ -28,7 +28,7 @@ class Script:
     CATEGORY = "SeedV"
 
     def execute(self, script, seed, a=None, b=None, c=None, d=None, e=None):
-        random.seed(seed)
+        # random.seed(seed)
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
         exec(script, {"__builtins__": {"random": random}}, loc)
 
