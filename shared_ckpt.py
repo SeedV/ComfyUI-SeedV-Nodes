@@ -110,7 +110,7 @@ class LoraLoader:
     CATEGORY = "SeedV"
 
     def load_lora(self, model, clip, lora_name, strength_model, strength_clip):
-        if strength_model == 0 and strength_clip == 0:
+        if strength_model == 0 and strength_clip == 0 or not lora_name:
             return (model, clip)
 
         lora_path = folder_paths.get_full_path("loras", lora_name)
