@@ -1,5 +1,7 @@
 import nodes
 import folder_paths
+import comfy.sd
+import comfy.utils
 
 cache = {}
 cache_count = {}
