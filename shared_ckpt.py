@@ -114,6 +114,8 @@ class LoraLoader:
             return (model, clip)
 
         lora_path = folder_paths.get_full_path("loras", lora_name)
+        assert lora_path, f"lora '{lora_name}' not found"
+
         lora = None
         if self.loaded_lora is not None:
             if self.loaded_lora[0] == lora_path:
