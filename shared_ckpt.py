@@ -112,8 +112,6 @@ class LoraLoader:
     def load_lora(self, model, clip, lora_name, strength_model, strength_clip):
         if strength_model == 0 and strength_clip == 0 or not lora_name:
             return (model, clip)
-        if strength_clip == 0:
-            clip = None
         lora_path = folder_paths.get_full_path("loras", lora_name)
         assert lora_path, f"lora '{lora_name}' not found"
 
@@ -130,5 +128,9 @@ class LoraLoader:
             lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
             self.loaded_lora = (lora_path, lora)
 
-        model_lora, clip_lora = comfy.sd.load_lora_for_models(model, clip, lora, strength_model, strength_clip)
+        model_lora, clip_lora = comfy.sd.load_lora_for_models(model, clip if strength_clip else None, lora,
+                                                              strength_model, strength_clip)
+        if strength_clip == 0:
+            clip_lora = clip
+        
         return (model_lora, clip_lora)
