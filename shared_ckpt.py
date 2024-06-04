@@ -112,7 +112,8 @@ class LoraLoader:
     def load_lora(self, model, clip, lora_name, strength_model, strength_clip):
         if strength_model == 0 and strength_clip == 0 or not lora_name:
             return (model, clip)
-
+        if strength_clip == 0:
+            clip = None
         lora_path = folder_paths.get_full_path("loras", lora_name)
         assert lora_path, f"lora '{lora_name}' not found"
 
