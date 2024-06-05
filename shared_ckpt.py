@@ -132,5 +132,35 @@ class LoraLoader:
                                                               strength_model, strength_clip)
         if strength_clip == 0:
             clip_lora = clip
-        
+
         return (model_lora, clip_lora)
+
+
+controlnet_cache = {}
+
+
+class ControlNetLoaderAdvancedShared:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "control_net_name": (folder_paths.get_filename_list("controlnet"),),
+            },
+        }
+
+    RETURN_TYPES = ("CONTROL_NET",)
+    FUNCTION = "load_controlnet"
+
+    CATEGORY = "SeedV"
+
+    def load_controlnet(self, control_net_name):
+        if control_net_name in controlnet_cache:
+            return controlnet_cache[control_net_name]
+
+        import importlib
+        load_controlnet = importlib.import_module(
+            "custom_nodes.ComfyUI-Advanced-ControlNet.adv_control.control").load_controlnet
+        controlnet_path = folder_paths.get_full_path("controlnet", control_net_name)
+        controlnet = load_controlnet(controlnet_path)
+        controlnet_cache[control_net_name] = (controlnet,)
+        return (controlnet,)
