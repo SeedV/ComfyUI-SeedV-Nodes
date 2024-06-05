@@ -3,27 +3,6 @@ import folder_paths
 import comfy.sd
 import comfy.utils
 
-cache = {}
-cache_count = {}
-
-
-def cache_weak_hash(k):
-    cnt = cache_count.get(k)
-    if cnt is None:
-        cnt = 0
-
-    return k, cnt
-
-
-def update_cache(k, tag, v):
-    cache[k] = (tag, v)
-    cnt = cache_count.get(k)
-    if cnt is None:
-        cnt = 0
-        cache_count[k] = cnt
-    else:
-        cache_count[k] += 1
-
 
 class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
     @classmethod
@@ -53,7 +32,11 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
             key = ckpt_name
         else:
             key = key_opt.strip()
-
+        import importlib
+        module = importlib.import_module(
+            "custom_nodes.ComfyUI-Inspire-Pack.inspire.backend_support")
+        cache = module.cache
+        update_cache = module.update_cache
         if key not in cache or mode == 'Override Cache':
             res = self.load_checkpoint(ckpt_name)
             update_cache(key, "ckpt", (False, res))
@@ -82,7 +65,9 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
             key = ckpt_name
         else:
             key = key_opt.strip()
-
+        import importlib
+        cache_weak_hash = importlib.import_module(
+            "custom_nodes.ComfyUI-Inspire-Pack.inspire.backend_support").cache_weak_hash
         if mode == 'Read Only':
             return (None, cache_weak_hash(key))
         elif mode == 'Override Cache':
