@@ -1,6 +1,19 @@
 import random
 
 
+class AnyType(str):
+    """A special class that is always equal in not equal comparisons."""
+
+    def __eq__(self, __value: object) -> bool:
+        return True
+
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+
+any = AnyType("*")
+
+
 class Script:
     @classmethod
     def INPUT_TYPES(cls):
@@ -8,18 +21,14 @@ class Script:
             "required": {
                 "script": ("STRING", {
                     "multiline": True,
-                    "dynamicPrompts": False,
-                }),
-                "seed": ("INT", {
-                    "default": 0, "min": 0, "max": 0xffffffffffffffff
                 }),
             },
             "optional": {
-                "a": ("INT,FLOAT,STRING",),
-                "b": ("INT,FLOAT,STRING",),
-                "c": ("INT,FLOAT,STRING",),
-                "d": ("INT,FLOAT,STRING",),
-                "e": ("INT,FLOAT,STRING",),
+                "a": (any, {}),
+                "b": (any, {}),
+                "c": (any, {}),
+                "d": (any, {}),
+                "e": (any, {}),
             },
         }
 
@@ -27,8 +36,7 @@ class Script:
     FUNCTION = "execute"
     CATEGORY = "SeedV"
 
-    def execute(self, script, seed, a=None, b=None, c=None, d=None, e=None):
-        # random.seed(seed)
+    def execute(self, script, a=None, b=None, c=None, d=None, e=None):
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
         exec(script, {"__builtins__": {"random": random}}, loc)
 
@@ -43,3 +51,8 @@ class Script:
             result_float = 0
 
         return {"result": (result_int, result_float, str(result))}
+
+    @classmethod
+    def IS_CHANGED(cls):
+        """返回 Nan, 确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
+        return float("NaN")
