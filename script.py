@@ -1,4 +1,5 @@
 import random
+import time
 
 
 class AnyType(str):
@@ -54,5 +55,5 @@ class Script:
 
     @classmethod
     def IS_CHANGED(cls):
-        """返回 Nan, 确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
-        return float("NaN")
+        """确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
+        return time.time()
