@@ -54,6 +54,6 @@ class Script:
         return {"result": (result_int, result_float, str(result))}
 
     @classmethod
-    def IS_CHANGED(cls):
+    def IS_CHANGED(cls, script, a=None, b=None, c=None, d=None, e=None):
         """确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
         return time.time()
