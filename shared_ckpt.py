@@ -9,7 +9,7 @@ class CheckpointLoaderSimpleShared(nodes.CheckpointLoaderSimple):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "ckpt_name": ("STRING", ""),
+                "ckpt_name": ("STRING", {"default": ""}),
                 "key_opt": ("STRING", {"multiline": False, "placeholder": "If empty, use 'ckpt_name' as the key."}),
             },
             "optional": {
@@ -84,7 +84,7 @@ class LoraLoader:
     def INPUT_TYPES(s):
         return {"required": {"model": ("MODEL",),
                              "clip": ("CLIP",),
-                             "lora_name": ("STRING", ""),
+                             "lora_name": ("STRING", {"default": ""}),
                              "strength_model": ("FLOAT", {"default": 1.0, "min": -20.0, "max": 20.0, "step": 0.01}),
                              "strength_clip": ("FLOAT", {"default": 1.0, "min": -20.0, "max": 20.0, "step": 0.01}),
                              }}
