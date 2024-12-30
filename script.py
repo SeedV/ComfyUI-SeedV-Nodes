@@ -1,3 +1,5 @@
+import json
+import math
 import random
 import time
 
@@ -13,6 +15,21 @@ class AnyType(str):
 
 
 any = AnyType("*")
+
+builtin_symbols = {
+    "abs": abs,
+    "json": json,
+    "len": len,
+    "math": math,
+    "min": min,
+    "max": max,
+    "pow": pow,
+    "print": print,
+    "random": random,
+    "range": range,
+    "round": round,
+    "Exception": Exception,
+}
 
 
 class Script:
@@ -39,7 +56,7 @@ class Script:
 
     def execute(self, script, a=None, b=None, c=None, d=None, e=None):
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
-        exec(script, {"__builtins__": {"random": random}}, loc)
+        exec(script, {"__builtins__": builtin_symbols}, loc)
 
         result = loc["result"]
         try:
@@ -55,5 +72,6 @@ class Script:
 
     @classmethod
     def IS_CHANGED(cls, script, a=None, b=None, c=None, d=None, e=None):
-        """确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
+        # Ensure the script is re-executed each time when using random numbers
+        # in the script.
         return time.time()
