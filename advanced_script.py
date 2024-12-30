@@ -1,8 +1,6 @@
-import json
-import random
 import time
 
-from .script import any, builtin_symbols
+from .script import any
 
 
 class AdvancedScript:
@@ -35,7 +33,7 @@ class AdvancedScript:
                 functions=None):
         full_script = script if not functions else f"{functions}\n{script}"
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
-        exec(full_script, {"__builtins__": builtin_symbols}, loc)
+        exec(full_script, globals(), loc)
 
         result1 = loc.get("result1", 0)
         try:

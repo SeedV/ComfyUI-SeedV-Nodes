@@ -1,5 +1,3 @@
-import json
-import math
 import random
 import time
 
@@ -15,21 +13,6 @@ class AnyType(str):
 
 
 any = AnyType("*")
-
-builtin_symbols = {
-    "abs": abs,
-    "json": json,
-    "len": len,
-    "math": math,
-    "min": min,
-    "max": max,
-    "pow": pow,
-    "print": print,
-    "random": random,
-    "range": range,
-    "round": round,
-    "Exception": Exception,
-}
 
 
 class Script:
@@ -56,7 +39,7 @@ class Script:
 
     def execute(self, script, a=None, b=None, c=None, d=None, e=None):
         loc = {"a": a, "b": b, "c": c, "d": d, "e": e}
-        exec(script, {"__builtins__": builtin_symbols}, loc)
+        exec(script, {"__builtins__": {"random": random}}, loc)
 
         result = loc["result"]
         try:
