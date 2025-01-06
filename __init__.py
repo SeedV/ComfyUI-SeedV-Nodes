@@ -1,7 +1,9 @@
+from .advanced_script import AdvancedScript
 from .script import Script
 from .shared_ckpt import CheckpointLoaderSimpleShared, LoraLoader, ControlNetLoaderAdvancedShared
 
 NODE_CLASS_MAPPINGS = {
+    "AdvancedScript": AdvancedScript,
     "Script": Script,
     "CheckpointLoaderSimpleShared //SeedV": CheckpointLoaderSimpleShared,
     "LoraLoader //SeedV": LoraLoader,
@@ -9,7 +11,8 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Script": "Script",
+    "AdvancedScript": "Advanced Script (SeedV)",
+    "Script": "Script (SeedV)",
     "CheckpointLoaderSimpleShared //SeedV": "Shared Checkpoint Loader (SeedV)",
     "LoraLoader //SeedV": "Load LoRA (SeedV)",
     "ControlNetLoaderAdvancedShared": "Shared Load Advanced ControlNet Model (SeedV)",

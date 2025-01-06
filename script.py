@@ -55,5 +55,6 @@ class Script:
 
     @classmethod
     def IS_CHANGED(cls, script, a=None, b=None, c=None, d=None, e=None):
-        """确保脚本中使用随机数的情况下，每次都会重新执行脚本。"""
+        # Ensure the script is re-executed each time when using random numbers
+        # in the script.
         return time.time()
