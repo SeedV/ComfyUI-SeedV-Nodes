@@ -1,11 +1,13 @@
 import logging
 import aiohttp
 import asyncio
-from .script import any  # 确保 `any` 是正确的导入路径
+from comfy.cli_args import args
+from .script import any
 
 class ModelUnloader:
     def __init__(self) -> None:
-        self.free_api = "http://127.0.0.1:8188/free"
+        self.port = args.port
+        self.free_api = "http://127.0.0.1:" + str(self.port) + "/free"
         self.headers = {"Content-Type": "application/json"}  # 赋值给实例
         self.mode = {"unload_models": True, "free_memory": True}  # 直接存 JSON 结构
 
