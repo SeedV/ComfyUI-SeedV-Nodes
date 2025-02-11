@@ -43,7 +43,5 @@ class ModelUnloader:
                     response.raise_for_status()
                     response_text = await response.text()
                     logging.info(f"Models unloaded and memory freed successfully!")
-        except asyncio.TimeoutError:
-            logging.error("Request timed out while freeing memory.")
-        except aiohttp.ClientError as e:
-            logging.error(f"HTTP request failed: {e}")
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
