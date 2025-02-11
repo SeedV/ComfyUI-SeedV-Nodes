@@ -10,7 +10,7 @@ class ModelUnloader:
         self.free_api = "http://127.0.0.1:" + str(self.port) + "/free"
         self.headers = {"Content-Type": "application/json"}  # 赋值给实例
         self.mode = {"unload_models": True, "free_memory": True}  # 直接存 JSON 结构
-
+        self.timeout = aiohttp.ClientTimeout(total=20) 
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -36,9 +36,8 @@ class ModelUnloader:
             asyncio.run(self._send_post_request())
 
     async def _send_post_request(self):
-        # 发送异步 POST 请求来卸载模型并释放内存
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=self.timeout) as session:
                 async with session.post(self.free_api, headers=self.headers, json=self.mode) as response:
                     response.raise_for_status()
                     response_text = await response.text()
