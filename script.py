@@ -33,7 +33,7 @@ class Script:
             },
         }
 
-    RETURN_TYPES = ("INT", "FLOAT", "STRING",)
+    RETURN_TYPES = ("INT", "FLOAT", "STRING", "BOOLEAN")
     FUNCTION = "execute"
     CATEGORY = "SeedV"
 
@@ -50,8 +50,12 @@ class Script:
             result_float = float(result)
         except ValueError:
             result_float = 0
+        try:
+            result_boolean=bool(result)
+        except ValueError:
+            result_float = 0
 
-        return {"result": (result_int, result_float, str(result))}
+        return {"result": (result_int, result_float, str(result), bool(result_boolean))}
 
     @classmethod
     def IS_CHANGED(cls, script, a=None, b=None, c=None, d=None, e=None):
