@@ -23,7 +23,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "LoraLoader //SeedV": "Load LoRA (SeedV)",
     "ControlNetLoaderAdvancedShared": "Shared Load Advanced ControlNet Model (SeedV)",
     "ALL_Model_UnLoader(SEEDV)": "ALL_Model_UnLoader(SEEDV)",
-    "Switch_Any(SEEDV)": "Switch_Any(SEEDV)",
+    "Switch_Any(SEEDV)": "Switch_Any(SEEDV UnSafe)",
     "TCD_Sampler(SEEDV)": "TCD_Sampler(SEEDV)"
 }
 
