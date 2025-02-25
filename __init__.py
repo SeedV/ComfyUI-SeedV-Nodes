@@ -2,6 +2,8 @@ from .advanced_script import AdvancedScript
 from .script import Script
 from .shared_ckpt import CheckpointLoaderSimpleShared, LoraLoader, ControlNetLoaderAdvancedShared
 from .unload_models import ModelUnloader
+from .tcd import TCDModelSamplingDiscrete
+from .switch_any import Switch_Any
 
 NODE_CLASS_MAPPINGS = {
     "AdvancedScript": AdvancedScript,
@@ -10,6 +12,8 @@ NODE_CLASS_MAPPINGS = {
     "LoraLoader //SeedV": LoraLoader,
     "ControlNetLoaderAdvancedShared": ControlNetLoaderAdvancedShared,
     "ALL_Model_UnLoader(SEEDV)": ModelUnloader,
+    "Switch_Any(SEEDV)": Switch_Any,
+    "TCD_Sampler(SEEDV)": TCDModelSamplingDiscrete
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -18,7 +22,9 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "CheckpointLoaderSimpleShared //SeedV": "Shared Checkpoint Loader (SeedV)",
     "LoraLoader //SeedV": "Load LoRA (SeedV)",
     "ControlNetLoaderAdvancedShared": "Shared Load Advanced ControlNet Model (SeedV)",
-    "ALL_Model_UnLoader(SEEDV)": "ALL_Model_UnLoader(SEEDV)"
+    "ALL_Model_UnLoader(SEEDV)": "ALL_Model_UnLoader(SEEDV)",
+    "Switch_Any(SEEDV)": "Switch_Any(SEEDV UnSafe)",
+    "TCD_Sampler(SEEDV)": "TCD_Sampler(SEEDV)"
 }
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
