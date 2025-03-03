@@ -20,7 +20,7 @@ class LoadAudioBase64:
 
     def load_audio(self, audio_base64_str):
         audio_bytes, sample_rate = process_audio_base64(audio_base64_str)
-        audio = {"waveform": audio_bytes, "sample_rate": sample_rate}
+        audio = {"waveform": audio_bytes.unsqueeze(0), "sample_rate": sample_rate}
         return audio
     
     @classmethod
