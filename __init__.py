@@ -4,7 +4,7 @@ from .shared_ckpt import CheckpointLoaderSimpleShared, LoraLoader, ControlNetLoa
 from .unload_models import ModelUnloader
 from .tcd import TCDModelSamplingDiscrete
 from .switch_any import Switch_Any
-from .input_tools import LoadAudioOrBase64
+from .input_tools import LoadAudioOrBase64, LoadAudioBase64
 
 NODE_CLASS_MAPPINGS = {
     "AdvancedScript": AdvancedScript,
@@ -16,7 +16,7 @@ NODE_CLASS_MAPPINGS = {
     "Switch_Any(SEEDV)": Switch_Any,
     "TCD_Sampler(SEEDV)": TCDModelSamplingDiscrete,
     "LoadAudioOrBase64": LoadAudioOrBase64,
-    “LoadAudioBase64”: LoadAudioBase64
+    "LoadAudioBase64": LoadAudioBase64
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
