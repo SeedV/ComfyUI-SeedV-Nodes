@@ -46,7 +46,8 @@ class nunchakuLoraAdapter:
     )
 
     def load_lora(self, model, lora_name: str, lora_strength: float):
-        
+        if lora_name == "":
+            return (model,)
         model_wrapper = model.model.diffusion_model
         
         transformer = model_wrapper.model
@@ -56,12 +57,9 @@ class nunchakuLoraAdapter:
 
         model_wrapper.model = transformer
         ret_model_wrapper.model = transformer
-        if lora_name == "":
-            ret_model_wrapper.loras = []
-            return (ret_model,)
-        else:
-            lora_path = folder_paths.get_full_path_or_raise("loras", lora_name)
-            ret_model_wrapper.loras.append((lora_path, lora_strength))
+
+        lora_path = folder_paths.get_full_path_or_raise("loras", lora_name)
+        ret_model_wrapper.loras.append((lora_path, lora_strength))
 
         sd = to_diffusers(lora_path)
         if "transformer.x_embedder.lora_A.weight" in sd:
