@@ -5,6 +5,7 @@ from .unload_models import ModelUnloader
 from .tcd import TCDModelSamplingDiscrete
 from .switch_any import Switch_Any
 from .nunchakuLoraAdapter import nunchakuLoraAdapter
+from .handle_image import HandleImage
 
 NODE_CLASS_MAPPINGS = {
     "AdvancedScript": AdvancedScript,
@@ -15,7 +16,8 @@ NODE_CLASS_MAPPINGS = {
     "ALL_Model_UnLoader(SEEDV)": ModelUnloader,
     "Switch_Any(SEEDV)": Switch_Any,
     "TCD_Sampler(SEEDV)": TCDModelSamplingDiscrete,
-    "nunchakuLoraAdapter(SEEDV)": nunchakuLoraAdapter
+    "nunchakuLoraAdapter(SEEDV)": nunchakuLoraAdapter,
+    "HandleImage(SEEDV)": HandleImage,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -27,7 +29,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "ALL_Model_UnLoader(SEEDV)": "ALL_Model_UnLoader(SEEDV)",
     "Switch_Any(SEEDV)": "Switch_Any(SEEDV UnSafe)",
     "TCD_Sampler(SEEDV)": "TCD_Sampler(SEEDV)",
-    "nunchakuLoraAdapter(SEEDV)": "nunchakuLoraAdapter(SEEDV)"
+    "nunchakuLoraAdapter(SEEDV)": "nunchakuLoraAdapter(SEEDV)",
+    "HandleImage(SEEDV)": "HandleImage",
 }
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
