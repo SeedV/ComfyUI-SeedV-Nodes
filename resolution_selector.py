@@ -75,6 +75,9 @@ class ResolutionSelector(io.ComfyNode):
             ],
         )
 
+    FUNCTION = "execute"
+    CATEGORY = "SeedV"
+
     @classmethod
     def execute(cls, aspect_ratio: str, megapixels: float, multiple: int, preview=None) -> io.NodeOutput:
         w_ratio, h_ratio = ASPECT_RATIOS[aspect_ratio]
