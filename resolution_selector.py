@@ -32,8 +32,6 @@ class ResolutionSelector(io.ComfyNode):
     @classmethod
     def define_schema(cls):
         return io.Schema(
-            node_id="ResolutionSelector",
-            display_name="Resolution Selector",
             category="SeedV",
             description="Calculate width and height from aspect ratio and megapixel target. Useful for setting up Empty Latent Image dimensions.",
             inputs=[
@@ -50,10 +48,6 @@ class ResolutionSelector(io.ComfyNode):
                     max=16.0,
                     step=0.1,
                     tooltip="Target total megapixels. 1.0 MP ≈ 1024x1024 for square.",
-                ),
-                io.ResolutionPreview.Input(
-                    "preview",
-                    tooltip="Live preview of the calculated output resolution.",
                 ),
                 io.Int.Input(
                     id="multiple",
@@ -76,7 +70,7 @@ class ResolutionSelector(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, aspect_ratio: str, megapixels: float, multiple: int, preview=None) -> io.NodeOutput:
+    def execute(cls, aspect_ratio: str, megapixels: float, multiple: int) -> io.NodeOutput:
         w_ratio, h_ratio = ASPECT_RATIOS[aspect_ratio]
         total_pixels = megapixels * 1024 * 1024
         scale = math.sqrt(total_pixels / (w_ratio * h_ratio))
