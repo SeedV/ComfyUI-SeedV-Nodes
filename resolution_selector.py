@@ -34,7 +34,7 @@ class ResolutionSelector(io.ComfyNode):
         return io.Schema(
             node_id="ResolutionSelector",
             display_name="Resolution Selector",
-            category="utilities",
+            category="SeedV",
             description="Calculate width and height from aspect ratio and megapixel target. Useful for setting up Empty Latent Image dimensions.",
             inputs=[
                 io.Combo.Input(
@@ -74,9 +74,6 @@ class ResolutionSelector(io.ComfyNode):
                 ),
             ],
         )
-
-    FUNCTION = "execute"
-    CATEGORY = "SeedV"
 
     @classmethod
     def execute(cls, aspect_ratio: str, megapixels: float, multiple: int, preview=None) -> io.NodeOutput:
