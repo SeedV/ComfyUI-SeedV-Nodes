@@ -3,7 +3,7 @@ from enum import Enum
 from comfy_api.latest import io
 
 
-class AspectRatio(str, Enum):
+class AspectRatioSeedV(str, Enum):
     SQUARE = "1:1"
     PHOTO_V = "2:3"
     PHOTO_H = "3:2"
@@ -14,15 +14,15 @@ class AspectRatio(str, Enum):
     ULTRAWIDE_H = "21:9"
 
 
-ASPECT_RATIOS: dict[AspectRatio, tuple[int, int]] = {
-    AspectRatio.SQUARE: (1, 1),
-    AspectRatio.PHOTO_V: (2, 3),
-    AspectRatio.PHOTO_H: (3, 2),
-    AspectRatio.STANDARD_V: (3, 4),
-    AspectRatio.STANDARD_H: (4, 3),
-    AspectRatio.WIDESCREEN_V: (9, 16),
-    AspectRatio.WIDESCREEN_H: (16, 9),
-    AspectRatio.ULTRAWIDE_H: (21, 9),
+ASPECT_RATIOS: dict[AspectRatioSeedV, tuple[int, int]] = {
+    AspectRatioSeedV.SQUARE: (1, 1),
+    AspectRatioSeedV.PHOTO_V: (2, 3),
+    AspectRatioSeedV.PHOTO_H: (3, 2),
+    AspectRatioSeedV.STANDARD_V: (3, 4),
+    AspectRatioSeedV.STANDARD_H: (4, 3),
+    AspectRatioSeedV.WIDESCREEN_V: (9, 16),
+    AspectRatioSeedV.WIDESCREEN_H: (16, 9),
+    AspectRatioSeedV.ULTRAWIDE_H: (21, 9),
 }
 
 
@@ -32,15 +32,15 @@ class ResolutionSelector(io.ComfyNode):
     @classmethod
     def define_schema(cls):
         return io.Schema(
-            node_id="ResolutionSelector",
-            display_name="Resolution Selector",
+            node_id="ResolutionSelector(SeedV)",
+            display_name="Resolution Selector (SeedV)",
             category="SeedV",
             description="Calculate width and height from aspect ratio and megapixel target. Useful for setting up Empty Latent Image dimensions.",
             inputs=[
                 io.Combo.Input(
                     "aspect_ratio",
-                    options=AspectRatio,
-                    default=AspectRatio.SQUARE,
+                    options=AspectRatioSeedV,
+                    default=AspectRatioSeedV.SQUARE,
                     tooltip="The aspect ratio for the output dimensions.",
                 ),
                 io.Float.Input(
