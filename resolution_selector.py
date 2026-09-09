@@ -3,7 +3,7 @@ from enum import Enum
 from comfy_api.latest import io
 
 
-class AspectRatioSeedV(str, Enum):
+class AspectRatio(str, Enum):
     SQUARE = "1:1"
     PHOTO_V = "2:3"
     PHOTO_H = "3:2"
@@ -14,15 +14,15 @@ class AspectRatioSeedV(str, Enum):
     ULTRAWIDE_H = "21:9"
 
 
-ASPECT_RATIOS: dict[AspectRatioSeedV, tuple[int, int]] = {
-    AspectRatioSeedV.SQUARE: (1, 1),
-    AspectRatioSeedV.PHOTO_V: (2, 3),
-    AspectRatioSeedV.PHOTO_H: (3, 2),
-    AspectRatioSeedV.STANDARD_V: (3, 4),
-    AspectRatioSeedV.STANDARD_H: (4, 3),
-    AspectRatioSeedV.WIDESCREEN_V: (9, 16),
-    AspectRatioSeedV.WIDESCREEN_H: (16, 9),
-    AspectRatioSeedV.ULTRAWIDE_H: (21, 9),
+ASPECT_RATIOS: dict[AspectRatio, tuple[int, int]] = {
+    AspectRatio.SQUARE: (1, 1),
+    AspectRatio.PHOTO_V: (2, 3),
+    AspectRatio.PHOTO_H: (3, 2),
+    AspectRatio.STANDARD_V: (3, 4),
+    AspectRatio.STANDARD_H: (4, 3),
+    AspectRatio.WIDESCREEN_V: (9, 16),
+    AspectRatio.WIDESCREEN_H: (16, 9),
+    AspectRatio.ULTRAWIDE_H: (21, 9),
 }
 
 
@@ -39,8 +39,8 @@ class ResolutionSelector(io.ComfyNode):
             inputs=[
                 io.Combo.Input(
                     "aspect_ratio",
-                    options=AspectRatioSeedV,
-                    default=AspectRatioSeedV.SQUARE,
+                    options=AspectRatio,
+                    default=AspectRatio.SQUARE,
                     tooltip="The aspect ratio for the output dimensions.",
                 ),
                 io.Float.Input(
@@ -72,7 +72,7 @@ class ResolutionSelector(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, aspect_ratio: str, megapixels: float, multiple: int) -> io.NodeOutput:
+    def execute(cls, aspect_ratio: AspectRatio, megapixels: float, multiple: int) -> io.NodeOutput:
         w_ratio, h_ratio = ASPECT_RATIOS[aspect_ratio]
         total_pixels = megapixels * 1024 * 1024
         scale = math.sqrt(total_pixels / (w_ratio * h_ratio))
