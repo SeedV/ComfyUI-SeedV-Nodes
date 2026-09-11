@@ -1,3 +1,4 @@
+from .resolution_selector import ResolutionSelector
 from .advanced_script import AdvancedScript
 from .script import Script
 from .shared_ckpt import CheckpointLoaderSimpleShared, LoraLoader, ControlNetLoaderAdvancedShared
@@ -8,6 +9,7 @@ from .nunchakuLoraAdapter import nunchakuLoraAdapter
 from .handle_image import HandleImage
 
 NODE_CLASS_MAPPINGS = {
+    "ResolutionSelector(SeedV)": ResolutionSelector,
     "AdvancedScript": AdvancedScript,
     "Script": Script,
     "CheckpointLoaderSimpleShared //SeedV": CheckpointLoaderSimpleShared,
@@ -21,6 +23,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
+    "ResolutionSelector(SeedV)": "Resolution Selector (SeedV)",
     "AdvancedScript": "Advanced Script (SeedV)",
     "Script": "Script (SeedV)",
     "CheckpointLoaderSimpleShared //SeedV": "Shared Checkpoint Loader (SeedV)",
