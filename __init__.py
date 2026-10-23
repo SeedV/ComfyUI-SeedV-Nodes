@@ -7,6 +7,10 @@ from .tcd import TCDModelSamplingDiscrete
 from .switch_any import Switch_Any
 from .nunchakuLoraAdapter import nunchakuLoraAdapter
 from .handle_image import HandleImage
+from .minimax_h3_turbo import (
+    NODE_CLASS_MAPPINGS as _H3_CLASSES,
+    NODE_DISPLAY_NAME_MAPPINGS as _H3_NAMES,
+)
 
 NODE_CLASS_MAPPINGS = {
     "ResolutionSelector(SeedV)": ResolutionSelector,
@@ -35,5 +39,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "nunchakuLoraAdapter(SEEDV)": "nunchakuLoraAdapter(SEEDV)",
     "HandleImage(SEEDV)": "HandleImage",
 }
+NODE_CLASS_MAPPINGS.update(_H3_CLASSES)
+NODE_DISPLAY_NAME_MAPPINGS.update(_H3_NAMES)
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
