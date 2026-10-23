@@ -104,7 +104,7 @@ def _native_av_schedule(model):
 
 
 @torch.no_grad()
-def _turbo_sampler(model, x, sigmas, extra_args=None, callback=None, disable=None,
+def _turbo_sampler_impl(model, x, sigmas, extra_args=None, callback=None, disable=None,
                    **kwargs):
     extra_args = {} if extra_args is None else extra_args
     s_in = x.new_ones([x.shape[0]])
@@ -163,6 +163,31 @@ def _turbo_sampler(model, x, sigmas, extra_args=None, callback=None, disable=Non
             callback({"i": i, "denoised": denoised, "x": x,
                       "sigma": sigmas[i], "sigma_hat": sigmas[i]})
     return x
+
+
+def _turbo_sampler(model, x, sigmas, extra_args=None, callback=None, disable=None,
+                   **kwargs):
+    # One sampler call = one stage; report that stage's CUDA memory peak.
+    dev = x.device
+    cuda = dev.type == "cuda"
+    if cuda:
+        torch.cuda.synchronize(dev)
+        torch.cuda.reset_peak_memory_stats(dev)
+        base = torch.cuda.memory_allocated(dev)
+    try:
+        return _turbo_sampler_impl(model, x, sigmas, extra_args=extra_args,
+                                   callback=callback, disable=disable, **kwargs)
+    finally:
+        if cuda:
+            torch.cuda.synchronize(dev)
+            mb = 1024 * 1024
+            peak = torch.cuda.max_memory_allocated(dev)
+            free, total = torch.cuda.mem_get_info(dev)
+            print(f"[H3TURBO vram] stage tokens={x.shape[-1]} steps={len(sigmas) - 1} | "
+                  f"peak allocated={peak // mb}MB reserved_peak="
+                  f"{torch.cuda.max_memory_reserved(dev) // mb}MB "
+                  f"(at start {base // mb}MB, +{(peak - base) // mb}MB) | "
+                  f"device free now={free // mb}MB/{total // mb}MB", flush=True)
 
 
 # --- pruned / curve-mode base support -------------------------------------
