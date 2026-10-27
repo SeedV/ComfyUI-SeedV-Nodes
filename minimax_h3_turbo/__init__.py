@@ -317,7 +317,16 @@ class _FrugalLoRA(comfy.weight_adapter.LoRAAdapter):
     into base_out in place keeps one temporary instead of three. base_out is the
     module's fresh output, so the in-place add is safe. Numerically identical to
     the stock LoRA bypass. Linear-only (all H3 lora modules are Linear); anything
-    else falls back to the stock path."""
+    else falls back to the stock path.
+
+    That one temporary is still the layer's full output: on a ~100k-token stage-2
+    sequence the qkv_proj delta is ~4 GiB and the fc1 delta ~5.3 GiB. With
+    `chunks` > 1 the delta is computed and added over that many sequence slices
+    (rows of the 2-D (s, in) input), so the temporary shrinks by ~chunks×. The
+    update is token-wise, so the result is the same as unchunked."""
+
+    chunks = 1
+    min_tokens = 8192
 
     def bypass_forward(self, org_forward, x, *args, **kwargs):
         base_out = org_forward(x, *args, **kwargs)
@@ -328,10 +337,16 @@ class _FrugalLoRA(comfy.weight_adapter.LoRAAdapter):
         scale = (alpha / rank if alpha is not None else 1.0) * getattr(self, "multiplier", 1.0)
         down = down.to(dtype=x.dtype)
         up = up.to(dtype=x.dtype)
-        return base_out.add_(F.linear(F.linear(x, down), up), alpha=scale)
+        s = x.shape[0]
+        if self.chunks <= 1 or x.dim() != 2 or s < self.min_tokens:
+            return base_out.add_(F.linear(F.linear(x, down), up), alpha=scale)
+        step = -(-s // self.chunks)
+        for i in range(0, s, step):
+            base_out[i:i + step].add_(F.linear(F.linear(x[i:i + step], down), up), alpha=scale)
+        return base_out
 
 
-def _apply_bypass_lora(new_model, lora, modules, strength):
+def _apply_bypass_lora(new_model, lora, modules, strength, chunks=1):
     """Apply the low-rank update at RUN TIME (output = base(x) + lora(x)) via
     ComfyUI's bypass injection, so it is never folded into the weights. The delta
     is tiny relative to the base weight — merging rounds it away in bf16 and
@@ -351,6 +366,7 @@ def _apply_bypass_lora(new_model, lora, modules, strength):
             continue
         if isinstance(adapter, comfy.weight_adapter.LoRAAdapter):
             adapter = _FrugalLoRA(adapter.loaded_keys, adapter.weights)
+            adapter.chunks = chunks
         elif not isinstance(adapter, comfy.weight_adapter.WeightAdapterBase):
             continue
         manager.add_adapter(key, adapter, strength=strength)
@@ -552,6 +568,11 @@ class MiniMaxH3TurboLoRA:
                 "tooltip": "Run each DiT MLP over this many sequence slices "
                            "(exact same result, ~N× lower MLP peak VRAM). "
                            "1 = off."}),
+            "lora_chunks": ("INT", {
+                "default": 4, "min": 1, "max": 32,
+                "tooltip": "Compute each bypassed layer's LoRA delta over this "
+                           "many sequence slices (exact same result, ~N× lower "
+                           "delta peak VRAM; bypass mode only). 1 = off."}),
         }}
 
     RETURN_TYPES = ("MODEL",)
@@ -559,7 +580,8 @@ class MiniMaxH3TurboLoRA:
     CATEGORY = "MiniMaxH3Turbo"
     DESCRIPTION = "Apply the MiniMax-H3 Turbo LoRA to the H3 diffusion model."
 
-    def apply_lora(self, model, lora_name, strength, low_vram=False, mlp_chunks=4):
+    def apply_lora(self, model, lora_name, strength, low_vram=False, mlp_chunks=4,
+                   lora_chunks=4):
         path = folder_paths.get_full_path("loras", lora_name)
         lora = comfy.utils.load_torch_file(path, safe_load=True)
         dm = model.model.diffusion_model
@@ -586,7 +608,7 @@ class MiniMaxH3TurboLoRA:
             # the rest via bypass (see _int8_fused_fc2).
             fc2_fused = set(_int8_fused_fc2(dm, backbone))
             bypass_mods = [m for m in backbone if m not in fc2_fused]
-            n = _apply_bypass_lora(new_model, lora, bypass_mods, strength)
+            n = _apply_bypass_lora(new_model, lora, bypass_mods, strength, lora_chunks)
             if fc2_fused:
                 n_fc2 = _apply_merge_lora(new_model, lora, sorted(fc2_fused), strength)
                 n += n_fc2
@@ -611,7 +633,8 @@ class MiniMaxH3TurboLoRA:
         print(f"[MiniMaxH3TurboLoRA] {'pruned' if pruned else 'full'} base [{mode}]: "
               f"lora={lora_name} strength={strength} | {len(backbone)} backbone "
               f"modules, {detail}{extra} | model={type(new_model.model).__name__} "
-              f"weight_dtype={wdt} weight_dev={wdev} | mlp_chunks={mlp_chunks} ({n_mlp} mlps)", flush=True)
+              f"weight_dtype={wdt} weight_dev={wdev} | mlp_chunks={mlp_chunks} ({n_mlp} mlps)"
+              f" lora_chunks={lora_chunks if not low_vram else '-'}", flush=True)
         _add_dbg_wrapper(new_model, dm, "pruned" if pruned else "full", mode)
         return (new_model,)
 
